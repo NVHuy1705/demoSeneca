@@ -1,17 +1,15 @@
-const seneca = require('./database/database')
+const app = require('./api');
+const { connect, getDb } = require('./database/mongoDb');
+const seneca = require('./service/seneca');
 
-const product = require('./service/product');
+// Kết nối tới MongoDB
+connect();
 
-product.create('product1', 10, function(err, product) {
-  if (err) return console.error(err);
-  console.log('Created product:', product);
+// Khởi tạo ExpressJS
+const PORT = 3000;
+app.listen(PORT, function() {
+  console.log(`Server is listening on port ${PORT}`);
 });
 
-product.update(1, 'product1', 20, function(err, product) {
-  if (err) return console.error(err);
-  console.log('Updated product:', product);
-});
-
-seneca.listen(3000, () => {
-  console.log('Seneca service started on port 3000')
-})
+// Khởi tạo SenecaJS
+seneca.listen({ port: 9000 });
